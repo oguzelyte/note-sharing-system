@@ -40,17 +40,15 @@ All your code must rigourously obey the formatting rules that I described in the
 
 7. HTML should be standard HTML5 but should be styled as XHTML, i.e. lower case tags, /> at the end of singleton tags (e.g. <br/>)
 
-8. You should SASS when writing any extra CSS code.
+8. SASS when writing any extra CSS code.
 
 9. SASS/CSS must be formatted according to these guidelines.
 
-10.  Please try to use JSDoc for any JavaScript you write.
+10. Use JSDoc for any JavaScript you write.
 
 # Deliverables
 
 Moodboard, Fontboard and Storyboard.
-
-DO NOT submit anything using Publisher format - I have no way of reading the files.
 
 Also a file (as txt, docx or pdf) containing a very brief, informal, textual description of your understanding of the requirements and your approach to meeting them. 
 
