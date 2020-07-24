@@ -1,0 +1,281 @@
+
+{% set ajax = TRUE %}
+
+{% import '@util/formmacro.twig' as f %}
+{% import '@util/modalmacro.twig' as m %}
+{% import '@util/attrmacro.twig' as h %}
+{% extends '@content/page.twig' %}
+
+{# this brings in some useful macros for making forms
+{% import '@util/formmacro.twig' as f %}
+#}
+
+{# this brings in some useful macros for making bootstrap modals
+{% import '@util/modalmacro.twig' as f %}
+#}
+
+{# put a string in this block that will appear as the title of the page
+{% block title %}
+{% endblock title %}
+#}
+
+{% block links %}
+{# <link> for non-css and non-type things#}
+{% endblock links %}
+
+{% block type %}
+{# <link> for webfonts #}
+{% endblock type %}
+
+{% block css %}
+{# <link> for any other CSS files you need #}
+{% endblock css %}
+
+{% block scripts %}
+{# <script src=""></script> for any other JS files you need #}
+{% endblock scripts %}
+
+{% block setup %}
+
+function delupload(e)
+{
+    e.preventDefault();
+    e.stopPropagation();
+    let tr = $(this).parent().parent();
+    let id = $(this).parent().parent().attr('id');
+
+    bootbox.confirm('Are you sure you you want to delete the file?', function(r)
+    {
+        if (r)
+        { // user picked OK
+            $.ajax(base+'/ajax/uploaddelete/upload/'+id, {
+                method: 'DELETE',
+            }).done(function(){
+                tr.css('background-color', 'yellow').fadeOut(1500, function(){ tr.remove(); });    
+            }).fail(function(jx){
+                bootbox.alert('<h3>Delete failed</h3>'+jx.responseText);
+            });
+        }
+    });
+}
+
+function download(e)
+{
+    e.preventDefault();
+    e.stopPropagation();
+    let path = $(this).attr('id');
+
+    bootbox.confirm('Are you sure you you want download this file?', function(r)
+    {
+        if (r)
+        { // user picked OK
+            window.location.replace(base+path);
+        }
+    });
+}
+
+function edit(e)
+{
+    let id = $(this).parent().parent().attr('id');
+    $('#olduploadid').val(id);
+}
+
+$('.formcheck').change(function() {
+    var empty = true;
+
+    $('.formcheck').each(function() {
+        if($(this).is('input:text') && $(this).val().length != 0)
+        {
+            empty = false;
+        }
+        else if ($(this).is('select') && $(this).val() != 'No Change') {
+            empty = false;
+        }
+        else if ($(this).is('input:file') && $(this).val() != '')
+        {
+            empty = false;
+        }
+        else if ($(this).is('input:radio:checked'))
+        {
+            empty = false;
+        }
+    });                   
+
+    if (empty) {
+        $('#formsend[type="submit"]').attr('disabled', 'disabled');
+    } else {
+        $('#formsend[type="submit"]').removeAttr('disabled');
+    }
+    
+});
+{% endblock setup %}
+
+{% block onload %}
+$('.delete').on('click', delupload);
+$('.download').on('click', download);
+$('.edit').on('click', edit);
+{% endblock onload %}
+
+
+{# If you include this, then the navigation bar in @util/page.twig will **NOT** appear
+{% block navigation %}
+{% endblock navigation %}
+#}
+
+{#
+    Edit the file navbar.twig to change the appearance of the
+    navigation bar. It is included by default from @util/page.twig
+#}
+
+{# uncomment this and delete header block to remove the <header> tag altogether
+{% block pageheader %}
+{% endblock pageheader %}
+#}
+
+{#
+    If you have a standard header for all (most) pages then put the
+    content in the file header.twig. It is included by @util/page.twig by
+    default. You then don't need to have a header block either.
+#}
+
+{% block header %}
+    <article class="col-md-12 mt-5">
+        <h1 class="cntr"> MY NOTES </h1>
+    </article>
+{% endblock header %}
+
+{% block main %}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <div class="modal-body">
+        <form action="#" method="post" role="form" enctype="multipart/form-data">
+                    <div class="form-group">
+                    <label>Change Module Code</label>
+                    <select class="form-control formcheck" name="modulecode">
+                    <option>No Change</option>
+                    <option>CSC3123</option>
+                    <option>CSC3124</option>
+                    <option>CSC3324</option>
+                    <option>CSC3422</option>
+                    <option>CSC3122</option>
+                    </select>
+                    </div>
+
+                    <div class="form-group">
+                    <label>Change Lecture Name</label>
+                    <select class="form-control formcheck" name="lecturename">
+                    <option>No Change</option>
+                    <option>Twig</option>
+                    <option>SEO</option>
+                    <option>PHP</option>
+                    <option>MySQL</option>
+                    <option>CSS</option>
+                    </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Change Tags (Separate by Comma) </label>
+                        <input type="text" id="un" name="tags" placeholder="Tags" class="form-control formcheck"
+                            data-parsley-trigger="change"  data-parsley-remote-reverse="false" 
+                            data-parsley-type="alphanum"
+                        />
+                    </div>
+
+                    <label class="control-label">Enable Public Access </label>
+                    
+                    <div class="form-check-inline">
+                    <label class="form-check-label">
+                    <input class="form-check-input formcheck" type="radio" name="publicaccess" id="exampleRadios1" value="option1" />  
+                    No
+                    </label>
+                    </div>
+
+                    <div class="form-check-inline">
+                    <label class="form-check-label">
+                    <input class="form-check-input formcheck" type="radio" name="publicaccess" id="exampleRadios2" value="option2" />
+                    Yes
+                    </label>
+                    </div>
+                    
+                    <input type="hidden" id="olduploadid" name="oldupload"/>
+
+                    <div class="form-group">
+                        <label for="f0" class="control-label">Sumit New File</label>
+                        <input type="file" id="f0" name="uploads[]" class="form-control-file formcheck" />
+                    </div>
+                    <button class="btn btn-primary" id="formsend" type="submit" disabled="disabled" name="savechanges">Save Changes</button>
+                </form>
+        </div>
+        
+    </div>
+</div>
+</div>
+    {% if files is empty %}
+        <p> You haven't uploaded any files. </p>
+    {% else %}
+        <section >
+            <article>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"> #</th>
+                            <th scope="col">Module Code</th>
+                            <th scope="col">Lecture Name</th>
+                            <th scope="col">Last Edited</th>
+                            <th scope="col">File Name</th>
+                            <th scope="col">Tags</th>
+                            <th scope="col">Rating</th>
+                            <th scope="col">Public Access</th>
+                            <th scope="col" colspan="3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% set nr = 1 %}
+                    {% for key, file in files %}                        
+                        <tr id="{{ key }}">
+                            <th scope="row" class="bname"> {{ nr }} </th>
+                            <td> {{ file.modulename }} </td>
+                            <td> {{ file.lecturename }} </td>
+                            <td> {{ file.added }} </td>
+                            <td> {{ file.filename }} </td>
+                            <td> {{ file.tags ?: 'No Tags Submitted' }} </td>
+                            {% if file.public %}
+                            <td> {{ file.rating }}/5 </td>
+                            {% else %}
+                            <td> Rating Disabled </td>
+                            {% endif %}
+                            <td> {{ file.public ? 'Enabled':'Disabled' }} </td> 
+                            <td> <a href="" class="delete"> Delete </a> </td>
+                            <td> <a href="" class="edit" data-toggle="modal" data-target="#exampleModal"> Edit </a> </td>
+                            <td> <a href="" class="download" id="{{ file.fname }}"> Download </td>
+                        </tr>
+                        {% set nr = nr + 1 %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </article>
+        </section>
+    {% endif %}
+{% endblock main %}
+
+{# uncomment this  and delete footer block to remove the <footer> tag altogether
+{% block pagefooter %}
+{% endblock pagefooter %}
+#}
+
+{#
+    If you have a standard footer for all (most) pages then put the
+    content in the file footer.twig. It is included by @util/page.twig by
+    default. You then don't need to have a footer block either.
+#}
+
+{% block footer %}
+{% endblock footer %}

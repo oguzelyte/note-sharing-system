@@ -1,0 +1,82 @@
+body {
+    font-family: 'Hind';
+    background-color: #fff;
+}
+
+.cntr {
+    text-align: center;
+}
+
+.delb, .noconfirm {
+    color: red;
+}
+
+.actb, .admb, .editb, .delb, .devb, .reqb, .rdob, .disb {
+    cursor: pointer;
+}
+
+.fadis {
+    color: #aaa;
+}
+
+/*
+* overriding custom bootstrap styles
+* Author: Olivija Guzelyte
+*/
+
+.bg-dark {
+    background-color: #557362!important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #F2F2F2;
+    padding: 15px 10px 15px 10px;
+}
+
+.navbar-dark .navbar-nav .active>.nav-link, .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .show>.nav-link {
+    background-color: #1B4040!important;
+    color: #fff;
+}
+
+.navbar {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-family: 'Ubuntu';
+    font-size: 16px;
+    
+}
+
+h1, h2 {
+    color: #1B4040 !important;
+    font-family: 'Ubuntu' !important;
+    font-weight: bold !important;
+}
+
+.table {
+    text-align: center !important;
+}
+
+
+.exists {
+    background-color: #F2B90F;
+    border-radius: 50% !important;
+    width: 125px;
+    height: 125px;
+    text-align: center;
+}
+
+.notexists {
+    background-color: #F2F2F2;
+    border-radius: 50% !important;
+    width: 125px;
+    height: 125px;
+    text-align: center;
+}
+
+.col-sm-2 {
+    padding:0px 0px 20px 0px!important;
+}
+
+#inputtag {
+    margin-left: 10px;
+}
